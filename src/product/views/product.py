@@ -22,18 +22,12 @@ class ProductListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
-
-        # for product in products:
-        #     print("title: ", product.title,
-        #           " variants: ", product.product_variant_prices.all())
-
         products = Product.objects.all()
 
         product_items = []
         for product in products:
             product_variants = []
             variants = product.product_variant_prices.all()
-            # print("variant_set: ", variants)
 
             for variant in variants:
                 title = ""
@@ -50,8 +44,6 @@ class ProductListView(generic.ListView):
                     "stock": variant.stock
                 })
 
-                # print("variants: ", product_variants)
-
             product_items.append({
                 "id": product.id,
                 "title": product.title,
@@ -60,7 +52,15 @@ class ProductListView(generic.ListView):
                 "created_at": product.created_at,
             })
 
-        # print("product_items: ", product_items)
 
         context['products'] = product_items
+
+        variants = []
+        all_variants = Variant.objects.all()
+        for variant in all_variants:
+            product_variants = variant.productvariant_set.all()
+            variants.append((variant.title, product_variants))
+
+        context['variants'] = variants
+
         return context

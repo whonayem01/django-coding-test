@@ -15,9 +15,18 @@
                 <div class="col-md-2">
                     <input type="text" name="title" placeholder="Product Title" class="form-control">
                 </div>
+    
                 <div class="col-md-2">
                     <select name="variant" id="" class="form-control">
                         <option selected disabled>--Select A Variant--</option>
+
+                        {% for title, product_variants in variants %}
+                            <optgroup label="{{ title }}">
+                                {% for product_variant in product_variants %}
+                                    <option value="{{ product_variant }}">{{ product_variant }}</option>
+                                {% endfor %}
+                            </optgroup>
+                        {% endfor %}
 
                     </select>
                 </div>
