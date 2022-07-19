@@ -22,7 +22,18 @@ class ProductListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
-        products = Product.objects.all()
+        
+        # get query params
+        title = self.request.GET.get('title')
+        price_from = self.request.GET.get('price_from')
+        price_to = self.request.GET.get('price_to')
+        date = self.request.GET.get('date')
+
+        products = None
+        if len(title):
+            products = Product.objects.filter(title__startswith=title)
+        else:
+            products = Product.objects.all()
 
         product_items = []
         for product in products:
@@ -52,7 +63,6 @@ class ProductListView(generic.ListView):
                 "created_at": product.created_at,
             })
 
-
         context['products'] = product_items
 
         variants = []
@@ -62,5 +72,7 @@ class ProductListView(generic.ListView):
             variants.append((variant.title, product_variants))
 
         context['variants'] = variants
+
+        print("request: ", self.request.GET.get('title'))
 
         return context
